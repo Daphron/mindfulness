@@ -1,7 +1,7 @@
 var redirect_page = chrome.extension.getURL("blocked.html");
 var queue_max_length = 5;
 var num_cycles_needed = 2;
-var blocked_urls = ["*://xkcd.com/*"];
+var blocked_urls = [];
 var recent_urls = []; // oldest -> youngest
 
 function get_blocked_urls() {
@@ -59,8 +59,6 @@ chrome.webNavigation.onCompleted.addListener(
         }
         );
 
-// TODO: use the thing in the chrome tab to do redirect via content_scripts
-// instead of onbeforerequest
 chrome.webNavigation.onBeforeNavigate.addListener(
         function(details) {
             if(blocked_urls.includes(details.url)) {
