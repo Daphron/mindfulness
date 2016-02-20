@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+
+  "name": "Mindfulness",
+  "description": "Blocks 'mindless' website hopping",
+  "version": "1.0",
+  "background": {"scripts":["background.js"]},
+
+  "permissions": [
+    "activeTab",
+    "storage",
+    "history",
+    "webRequest",
+    "<all_urls>",
+    "webRequestBlocking"
+  ]
+}
