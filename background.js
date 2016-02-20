@@ -1,15 +1,19 @@
 var redirect_page = chrome.extension.getURL("blocked.html");
 var queue_max_length = 5;
 var num_cycles_needed = 2;
+var time_before_reset = 1000 * 15; // in milliseconds
+
 var blocked_urls = [];
 var recent_urls = []; // oldest -> youngest
+var recent_urls_timestamps = [];
 
 function get_blocked_urls() {
     var last_url = "";
     var url_map = new Map();
     for(var i = 0; i < recent_urls.length; i++) {
         var url = recent_urls[i];
-        if(url != last_url) {
+        var ts = recent_urls_timestamps[i];
+        if(url != last_url && (Date.now() - ts <= time_before_reset)) {
             if(url_map.has(url)) {
                 url_map.set(url, url_map.get(url) + 1);
             } else {
@@ -44,9 +48,11 @@ chrome.webNavigation.onCompleted.addListener(
 
                 // console.log("chrome.webNavigation.onBeforeNavigate hit on " + details.timeStamp);
                 recent_urls.push(details.url); // add new elem to end of array
+                recent_urls_timestamps.push(Date.now());
                 if(recent_urls.length > queue_max_length) {
 
                     recent_urls.shift(); // remove first elem of array (oldest)
+                    recent_urls_timestamps.shift(); 
                 }
                 blocked_urls = get_blocked_urls();
                 console.log("recent_urls:", recent_urls);
@@ -65,6 +71,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(
                 chrome.tabs.update(details.tabId, {url:redirect_page});
                 blocked_urls = [];
                 recent_urls = [];
+                recent_urls_timestamps = [];
             }
         },
         {

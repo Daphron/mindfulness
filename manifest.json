@@ -3,7 +3,7 @@
 
   "name": "Mindfulness",
   "description": "Blocks 'mindless' website hopping",
-  "version": "1.0",
+  "version": "0.7",
   "background": {"scripts":["background.js"]},
   "web_accessible_resources": ["blocked.html"],
 
