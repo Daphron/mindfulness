@@ -77,11 +77,12 @@ chrome.webNavigation.onCompleted.addListener(
 
 chrome.webNavigation.onBeforeNavigate.addListener(
         function(details) {
+            console.log("onBEforeNavigate url:", details.url);
             if(array_contains(blocked_urls, details.url)) {
                 chrome.tabs.update(details.tabId, {url:redirect_page});
-                // blocked_urls = [];
-                // recent_urls = [];
-                // recent_urls_timestamps = [];
+                blocked_urls = [];
+                recent_urls = [];
+                recent_urls_timestamps = [];
             }
         },
         {
